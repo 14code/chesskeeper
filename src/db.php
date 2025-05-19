@@ -1,10 +1,9 @@
 <?php
-$config = require __DIR__ . '/../config/config.php';
-$dsn = "mysql:host={$config['db']['host']};dbname={$config['db']['dbname']};charset={$config['db']['charset']}";
+$dbPath = __DIR__ . '/../data/chesskeeper.sqlite';
+
 try {
-    $pdo = new PDO($dsn, $config['db']['user'], $config['db']['pass'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $pdo = new PDO('sqlite:' . $dbPath);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("DB connection failed: " . $e->getMessage());
 }

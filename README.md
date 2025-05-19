@@ -1,17 +1,9 @@
 # Chesskeeper
 
-**Chesskeeper** is a lightweight web app for managing personal chess games.
+Chesskeeper is a lightweight web app for managing personal chess games.
 
-## Features
-- Manage games, players, tournaments
-- Upload scanned game sheets
-- Manual PGN entry and export
-- Filter and export PGNs by opponent, result, tournament, color
+- Uses SQLite as backend
+- Prepares for multi-user architecture (no default user_id)
+- Image files stored per user in `data/users/1/images/`
 
-## Tech Stack
-- PHP
-- MySQL or MariaDB
-- Composer
-
-## License
-MIT License (see LICENSE file)
+To install the database: `php bin/install.php`

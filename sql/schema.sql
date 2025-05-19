@@ -1,38 +1,43 @@
--- Datenbankschema mit players, games, tournaments, images
+-- SQLite schema without DEFAULT 1 for user_id
+
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL
+);
 
 CREATE TABLE players (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    fide_id VARCHAR(20),
-    club VARCHAR(255),
-    links JSON
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    fide_id TEXT,
+    club TEXT,
+    links TEXT
 );
 
 CREATE TABLE tournaments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    location VARCHAR(255),
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    location TEXT,
     start_date DATE,
     end_date DATE
 );
 
 CREATE TABLE games (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
     date DATE NOT NULL,
-    white_player_id INT NOT NULL,
-    black_player_id INT NOT NULL,
-    result DECIMAL(2,1) NOT NULL,
-    tournament_id INT,
-    pgn TEXT,
-    FOREIGN KEY (white_player_id) REFERENCES players(id),
-    FOREIGN KEY (black_player_id) REFERENCES players(id),
-    FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
+    white_player_id INTEGER NOT NULL,
+    black_player_id INTEGER NOT NULL,
+    result REAL NOT NULL,
+    tournament_id INTEGER,
+    pgn TEXT
 );
 
 CREATE TABLE images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    game_id INT NOT NULL,
-    image_url VARCHAR(1024) NOT NULL,
-    position INT NOT NULL,
-    FOREIGN KEY (game_id) REFERENCES games(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    game_id INTEGER NOT NULL,
+    image_url TEXT NOT NULL,
+    position INTEGER NOT NULL
 );
