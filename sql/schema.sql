@@ -1,4 +1,4 @@
--- SQLite schema without DEFAULT 1 for user_id
+-- SQLite schema for Chesskeeper (explicit user_id, no defaults)
 
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +37,7 @@ CREATE TABLE games (
 CREATE TABLE images (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    game_id INTEGER NOT NULL,
+    game_id INTEGER,
     image_url TEXT NOT NULL,
     position INTEGER NOT NULL
 );
