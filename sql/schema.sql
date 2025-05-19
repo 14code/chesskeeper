@@ -7,7 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    user_id INTEGER,
     name TEXT NOT NULL,
     fide_id TEXT,
     club TEXT,
@@ -27,11 +27,11 @@ CREATE TABLE games (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     date DATE NOT NULL,
-    white_player_id INTEGER NOT NULL,
-    black_player_id INTEGER NOT NULL,
+    white_player_id INTEGER,
+    black_player_id INTEGER,
     result REAL NOT NULL,
     tournament_id INTEGER,
-    pgn TEXT
+    pgn TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE images (
