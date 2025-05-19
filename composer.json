@@ -1,0 +1,5 @@
+{
+    "name": "chesskeeper/app",
+    "description": "Personal chess game manager",
+    "require": {}
+}
