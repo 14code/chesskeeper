@@ -6,6 +6,7 @@
 </head>
 <body>
     <nav>
+        <a href="/">Home</a> |
         <a href="/games">Games</a> |
         <a href="/players">Players</a> |
         <a href="/tournaments">Tournaments</a>
