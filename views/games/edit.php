@@ -51,6 +51,11 @@
       </a>
       <div style="text-align: center;">Position <?= $img['position'] ?></div>
     </div>
+      <form method="post" action="/delete-image.php" onsubmit="return confirm('Delete this image?');">
+          <input type="hidden" name="id" value="<?= $img['id'] ?>">
+          <button type="submit" style="font-size: small;">🗑️</button>
+      </form>
+
   <?php endforeach; ?>
 </div>
 
