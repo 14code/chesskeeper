@@ -2,3 +2,7 @@ config.php
 /.idea/
 .DS_Store
 /data/
+/.artifacts/
+/public/assets/
+/.composer/
+/vendor/
