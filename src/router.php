@@ -15,7 +15,10 @@ function routeRequest() {
         case 'add-player': showPlayerForm(); break;
         case 'tournaments': showTournamentList(); break;
         case 'add-tournament': showTournamentForm(); break;
-        case '': include __DIR__ . '/../views/home.php'; break;
+        case '':
+            $content = __DIR__ . '/../views/home.php';
+            include __DIR__ . '/../views/layout.php';
+            break;
         default: http_response_code(404); echo '404 Not Found';
     }
 }

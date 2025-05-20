@@ -12,6 +12,7 @@
         <a href="/tournaments">Tournaments</a> |
         <a href="/assign.php">Assign</a> |
         <a href="/upload.php">Upload</a> |
+        <a href="/import.php">Import</a>
     </nav>
     <hr>
     <?php include $content; ?>

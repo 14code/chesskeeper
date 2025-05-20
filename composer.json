@@ -1,5 +1,12 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Chesskeeper\\": "src"
+        }
+    },
     "name": "chesskeeper/app",
     "description": "Personal chess game manager",
-    "require": {}
+    "require": {
+      "ext-pdo": "*"
+    }
 }
