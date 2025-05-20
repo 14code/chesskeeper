@@ -18,6 +18,26 @@ $stmt = $pdo->prepare("SELECT * FROM images WHERE game_id = ? ORDER BY position 
 $stmt->execute([$gameId]);
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$whiteName = null;
+$blackName = null;
+if (!empty($game['white_player_id'])) {
+    $stmt = $pdo->prepare("SELECT name FROM players WHERE id = ?");
+    $stmt->execute([$game['white_player_id']]);
+    $whiteName = $stmt->fetchColumn();
+}
+if (!empty($game['black_player_id'])) {
+    $stmt = $pdo->prepare("SELECT name FROM players WHERE id = ?");
+    $stmt->execute([$game['black_player_id']]);
+    $blackName = $stmt->fetchColumn();
+}
+
+$tournamentName = null;
+if (!empty($game['tournament_id'])) {
+    $stmt = $pdo->prepare("SELECT name FROM tournaments WHERE id = ?");
+    $stmt->execute([$game['tournament_id']]);
+    $tournamentName = $stmt->fetchColumn();
+}
+
 $content = __DIR__ . '/../views/games/edit.php';
 include __DIR__ . '/../views/layout.php';
 

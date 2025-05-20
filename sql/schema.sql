@@ -17,7 +17,7 @@ CREATE TABLE players (
 CREATE TABLE tournaments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL DEFAULT '',
     location TEXT,
     start_date DATE,
     end_date DATE
