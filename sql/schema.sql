@@ -31,6 +31,7 @@ CREATE TABLE games (
     black_player_id INTEGER,
     result REAL NOT NULL,
     tournament_id INTEGER,
+    round INTEGER,
     pgn TEXT NOT NULL DEFAULT ''
 );
 

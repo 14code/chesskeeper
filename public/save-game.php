@@ -38,12 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $_POST['result'] ?? null;
     
     $tournament = getOrCreateTournamentId($pdo, $_POST['tournament_name'] ?? '');
-    
+
+    $round = isset($_POST['round']) && $_POST['round'] !== '' ? (int) $_POST['round'] : null;
+
     $pgn = $_POST['pgn'] ?? null;
 
     $stmt = $pdo->prepare("
         UPDATE games
-        SET date = ?, white_player_id = ?, black_player_id = ?, result = ?, tournament_id = ?, pgn = ?
+        SET date = ?, white_player_id = ?, black_player_id = ?, result = ?, tournament_id = ?, round = ?, pgn = ?
         WHERE id = ? AND user_id = 1
     ");
 
@@ -53,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $black,
         $result,
         $tournament !== '' ? $tournament : null,
+        $round,
         $pgn,
         $id
     ]);

@@ -17,6 +17,7 @@
 
   <label>Result:<br>
     <select name="result">
+      <option value="0" <?= $game['result'] == 0 ? 'selected' : '' ?>>?</option>
       <option value="1" <?= $game['result'] == 1 ? 'selected' : '' ?>>1–0</option>
       <option value="0.5" <?= $game['result'] == 0.5 ? 'selected' : '' ?>>½–½</option>
       <option value="-1" <?= $game['result'] == -1 ? 'selected' : '' ?>>0–1</option>
@@ -26,6 +27,11 @@
   <label>Tournament Name:<br>
     <input type="text" name="tournament_name" value="<?= htmlspecialchars($tournamentName ?? '') ?>">
   </label><br><br>
+
+  <label>Round:<br>
+    <input type="number" name="round" value="<?= htmlspecialchars($game['round'] ?? '') ?>">
+  </label><br><br>
+
 
   <label>PGN:<br>
     <textarea name="pgn" rows="10" cols="80"><?= htmlspecialchars($game['pgn']) ?></textarea>

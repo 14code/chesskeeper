@@ -4,7 +4,7 @@ require_once __DIR__ . '/../src/db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['image_ids']) && is_array($_POST['image_ids'])) {
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("INSERT INTO games (user_id, date, result) VALUES (1, DATE('now'), 0.5)");
+    $stmt = $pdo->prepare("INSERT INTO games (user_id, date, result) VALUES (1, DATE('now'), 0)");
     $stmt->execute();
     $gameId = $pdo->lastInsertId();
 
