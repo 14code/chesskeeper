@@ -1,6 +1,10 @@
 <?php
 function showGameList() {
     global $pdo;
+
+    $stack = new \Chesskeeper\Services\MessageStack(1);
+    $messages = $stack->popAll();
+    
     $stmt = $pdo->query("SELECT * FROM games WHERE user_id = 1");
     $stmt = $pdo->query("
       SELECT g.*, 
