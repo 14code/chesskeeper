@@ -9,9 +9,9 @@ class Game
     {
         $stmt = $db->prepare("
             INSERT INTO games (
-                white_player_id, black_player_id, result, date, round, pgn, tournament_id, user_id
+                white_player_id, black_player_id, result, date, round, moves, tournament_id, user_id
             ) VALUES (
-                :white_player_id, :black_player_id, :result, :date, :round, :pgn, :tournament_id, 1
+                :white_player_id, :black_player_id, :result, :date, :round, :moves, :tournament_id, 1
             )
         ");
 
@@ -21,7 +21,7 @@ class Game
             ':result' => $data['result'],
             ':date' => $data['date'],
             ':round' => $data['round'],
-            ':pgn' => $data['pgn'],
+            ':moves' => $data['moves'],
             ':tournament_id' => $data['tournament_id'],
         ]);
 

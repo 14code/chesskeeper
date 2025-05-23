@@ -21,7 +21,8 @@ class PGNParser
             $moveSection = preg_replace('/\[.*?\]/s', '', $gameText); // Tags entfernen
             $moveSection = preg_replace('/\{.*?\}/s', '', $moveSection); // Kommentare entfernen
             $moveSection = preg_replace('/\([^)]*\)/s', '', $moveSection); // Varianten entfernen
-            $moveSection = preg_replace('/\d+\.(\.\.\.)?/', '', $moveSection); // Zugnummern entfernen
+            // Zugnummern bleiben erhalten für Lesbarkeit und PGN-Rekonstruktion
+            //$moveSection = preg_replace('/\d+\.(\.\.\.)?/', '', $moveSection); // Zugnummern entfernen
             $moveSection = trim(preg_replace('/\s+/', ' ', $moveSection)); // Whitespace normalisieren
 
             $result[] = [

@@ -33,8 +33,8 @@
   </label><br><br>
 
 
-  <label>PGN:<br>
-    <textarea name="pgn" rows="10" cols="80"><?= htmlspecialchars($game['pgn']) ?></textarea>
+  <label>Moves:<br>
+    <textarea name="moves" rows="10" cols="80"><?= htmlspecialchars($game['moves']) ?></textarea>
   </label><br><br>
 
   <button type="submit">Save</button>

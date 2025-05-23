@@ -32,7 +32,9 @@ CREATE TABLE games (
     result REAL NOT NULL DEFAULT 0,
     tournament_id INTEGER,
     round INTEGER,
-    pgn TEXT NOT NULL DEFAULT ''
+    moves TEXT NOT NULL DEFAULT '',
+    created TEXT DEFAULT (datetime('now'))
+
 );
 
 CREATE TABLE images (

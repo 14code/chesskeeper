@@ -42,9 +42,15 @@ class PGNImportController
                 'result' => $gameData['result'],
                 'date' => $gameData['date'],
                 'round' => $gameData['round'],
-                'pgn' => $gameData['pgn'],
+                'moves' => $gameData['moves'],
                 'tournament_id' => $tournamentId
             ]);
+
+            $pgnDir = __DIR__ . '/../../data/pgn/';
+            if (!is_dir($pgnDir)) {
+                mkdir($pgnDir, 0777, true);
+            }
+            file_put_contents($pgnDir . $gameId . '.pgn', $gameData['pgn']);
 
             $imported[] = $gameId;
         }
