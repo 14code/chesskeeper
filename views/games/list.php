@@ -12,6 +12,7 @@
             <th>Result</th>
             <th>Tournament</th>
             <th>Round</th>
+            <th>Created</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($games as $game): ?>
@@ -26,6 +27,7 @@
                 </td>
                 <td><?= htmlspecialchars($game['tournament_name'] ?? '—') ?></td>
                 <td><?= htmlspecialchars($game['round'] ?? '') ?></td>
+                <td><?= htmlspecialchars($game['created'] ?? '') ?></td>
                 <td>
                     <a href="/edit-game.php?id=<?= $game['id'] ?>">Edit</a>
                 </td>

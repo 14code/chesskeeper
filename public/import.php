@@ -6,6 +6,9 @@ require_once __DIR__ . '/../src/db.php';
 
 
 use Chesskeeper\Controllers\PGNImportController;
+use Chesskeeper\Services\MessageStack;
+
+$stack = new MessageStack(1);
 
 $success = null;
 $error = null;
@@ -24,8 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $controller = new PGNImportController($pdo);
             $importedIds = $controller->import($input);
             $success = count($importedIds) . " game(s) imported successfully.";
+            $stack->push('success', count($importedIds) . ' game(s) imported.');
+            header('Location: /games');
+            exit;
         } catch (Exception $e) {
-            $error = "Error during import: " . $e->getMessage();
+            $stack->push('error', 'Import failed: ' . $e->getMessage());
         }
     } else {
         $error = "No PGN input provided.";
