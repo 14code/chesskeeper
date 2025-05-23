@@ -1,3 +1,9 @@
+<?php $game = $this->container->game; ?>
+<?php $images = $this->container->images; ?>
+<?php $blackName = $this->container->blackName; ?>
+<?php $whiteName = $this->container->whiteName; ?>
+<?php $tournamentName = $this->container->tournamentName; ?>
+
 <h1>Edit Game #<?= htmlspecialchars($game['id']) ?></h1>
 
 <form method="post" action="/save-game.php">

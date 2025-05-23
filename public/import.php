@@ -45,7 +45,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "No PGN input provided.";
     }
 }
-
-
-$content = __DIR__ . '/../views/import/form.php';
-include __DIR__ . '/../views/layout.php';
+header('Location: /import');
+exit;

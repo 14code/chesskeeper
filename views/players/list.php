@@ -1,12 +1,7 @@
 <h1>Players</h1>
 
-<?php foreach ($messages as $msg): ?>
-    <p style="color:<?= $msg['type'] === 'error' ? 'red' : 'green' ?>">
-        <?= htmlspecialchars($msg['text']) ?>
-    </p>
-<?php endforeach; ?>
 
-<?php if (empty($players)): ?>
+<?php if (empty($this->players)): ?>
     <p>No players found.</p>
 <?php else: ?>
     <table border="1" cellpadding="5">
@@ -15,7 +10,7 @@
             <th>Name</th>
             <th>FIDE-ID</th>
         </tr>
-        <?php foreach ($players as $player): ?>
+        <?php foreach ($this->players as $player): ?>
             <tr>
                 <td><?= htmlspecialchars($player['id']) ?></td>
                 <td><?= htmlspecialchars($player['name']) ?></td>

@@ -2,7 +2,7 @@
 
 <form method="post" action="/create-game.php">
   <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-    <?php foreach ($images as $image): ?>
+    <?php foreach ($this->images as $image): ?>
       <div style="border: 1px solid #ccc; padding: 8px;">
         <label>
           <input type="checkbox" name="image_ids[]" value="<?= $image['id'] ?>">

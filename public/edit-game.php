@@ -1,4 +1,9 @@
 <?php
+
+use Chesskeeper\Controllers\FrontController;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once __DIR__ . '/../src/db.php';
 
 $gameId = $_GET['id'] ?? null;
@@ -39,5 +44,11 @@ if (!empty($game['tournament_id'])) {
 }
 
 $content = __DIR__ . '/../views/games/edit.php';
-include __DIR__ . '/../views/layout.php';
 
+$controller = new FrontController($pdo);
+$controller->container->game = $game;
+$controller->container->images = $images;
+$controller->container->blackName = $blackName;
+$controller->container->whiteName = $whiteName;
+$controller->container->tournamentName = $tournamentName;
+$controller->show($content);

@@ -1,24 +1,20 @@
 <?php
-require_once __DIR__ . '/GameController.php';
-require_once __DIR__ . '/PlayerController.php';
-require_once __DIR__ . '/TournamentController.php';
 
-function routeRequest() {
+use Chesskeeper\Controllers\FrontController;
+
+function routeRequest(FrontController $controller) {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $base = dirname($_SERVER['SCRIPT_NAME']);
     $route = trim(str_replace($base, '', $uri), '/');
 
     switch ($route) {
-        case 'games': showGameList(); break;
-        case 'add-game': showGameForm(); break;
-        case 'players': showPlayerList(); break;
-        case 'add-player': showPlayerForm(); break;
-        case 'tournaments': showTournamentList(); break;
-        case 'add-tournament': showTournamentForm(); break;
-        case '':
-            $content = __DIR__ . '/../views/home.php';
-            include __DIR__ . '/../views/layout.php';
-            break;
+        case 'games': $controller->showGameList(); break;
+        case 'players': $controller->showPlayerList(); break;
+        case 'tournaments': $controller->showTournamentList(); break;
+        case 'assign': $controller->showAssignForm(); break;
+        case 'import': $controller->showImportForm(); break;
+        case 'upload': $controller->showUploadForm(); break;
+        case '': $controller->showHome(); break;
         default: http_response_code(404); echo '404 Not Found';
     }
 }

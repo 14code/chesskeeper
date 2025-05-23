@@ -33,5 +33,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$content = __DIR__ . '/../views/upload/form.php';
-include __DIR__ . '/../views/layout.php';
+header('Location: /assign');
+exit;
