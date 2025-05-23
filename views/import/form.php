@@ -13,7 +13,7 @@
         <p style="color: red"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <form action="/import_pgn.php" method="post" enctype="multipart/form-data">
+    <form action="/import.php" method="post" enctype="multipart/form-data">
         <label for="pgn_text">Paste PGN:</label><br>
         <textarea name="pgn_text" id="pgn_text" rows="15" cols="80"></textarea><br><br>
 

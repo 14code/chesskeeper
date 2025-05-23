@@ -29,7 +29,7 @@ CREATE TABLE games (
     date DATE NOT NULL,
     white_player_id INTEGER,
     black_player_id INTEGER,
-    result REAL NOT NULL,
+    result REAL NOT NULL DEFAULT 0,
     tournament_id INTEGER,
     round INTEGER,
     pgn TEXT NOT NULL DEFAULT ''

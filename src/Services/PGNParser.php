@@ -35,7 +35,7 @@ class PGNParser
                     '1-0' => 1,
                     '0-1' => -1,
                     '1/2-1/2' => 0.5,
-                    default => null
+                    default => 0
                 },
                 'pgn' => $gameText,
                 'moves' => $moveSection

@@ -1,6 +1,9 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/db.php';
+
 
 use Chesskeeper\Controllers\PGNImportController;
 
@@ -18,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (trim($input) !== '') {
         try {
-            $controller = new PGNImportController($db);
+            $controller = new PGNImportController($pdo);
             $importedIds = $controller->import($input);
             $success = count($importedIds) . " game(s) imported successfully.";
         } catch (Exception $e) {

@@ -1,5 +1,4 @@
 <?php
-// src/Controllers/PGNImportController.php
 
 namespace Chesskeeper\Controllers;
 
