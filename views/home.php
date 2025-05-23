@@ -4,7 +4,7 @@
   <li><a href="/games">Games</a></li>
   <li><a href="/players">Players</a></li>
   <li><a href="/tournaments">Tournaments</a></li>
-    <li><a href="/assign.php">Assign</a></li>
-    <li><a href="/upload.php">Upload</a></li>
-    <li><a href="/import.php">Import</a></li>
+    <li><a href="/assign">Assign</a></li>
+    <li><a href="/upload">Upload</a></li>
+    <li><a href="/import">Import</a></li>
 </ul>
