@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $round = isset($_POST['round']) && $_POST['round'] !== '' ? (int) $_POST['round'] : null;
 
-    $pgn = $_POST['pgn'] ?? null;
+    $moves = $_POST['moves'] ?? null;
 
     $stmt = $pdo->prepare("
         UPDATE games
-        SET date = ?, white_player_id = ?, black_player_id = ?, result = ?, tournament_id = ?, round = ?, pgn = ?
+        SET date = ?, white_player_id = ?, black_player_id = ?, result = ?, tournament_id = ?, round = ?, moves = ?
         WHERE id = ? AND user_id = 1
     ");
 
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result,
         $tournament !== '' ? $tournament : null,
         $round,
-        $pgn,
+        $moves,
         $id
     ]);
 

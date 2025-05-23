@@ -18,8 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['pgn_file']['tmp_name'])) {
         $input = file_get_contents($_FILES['pgn_file']['tmp_name']);
+        $raw = file_get_contents($_FILES['pgn_file']['tmp_name']);
+        if (!mb_detect_encoding($raw, ['UTF-8'], true)) {
+            $input = mb_convert_encoding($raw, 'UTF-8', 'Windows-1252'); // oder 'ISO-8859-1'
+        } else {
+            $input = $raw;
+        }
     } elseif (!empty($_POST['pgn_text'])) {
         $input = $_POST['pgn_text'];
+        $input = mb_convert_encoding($input, 'UTF-8', 'auto'); // optional, wenn du nichts riskieren willst
+
     }
 
     if (trim($input) !== '') {
