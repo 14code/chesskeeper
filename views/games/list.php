@@ -1,6 +1,6 @@
 <h1>Games</h1>
 
-<?php if (empty($this->games)): ?>
+<?php if (empty($games)): ?>
     <p>No games found.</p>
 <?php else: ?>
     <table border="1" cellpadding="5">
@@ -15,7 +15,7 @@
             <th>Created</th>
             <th>Actions</th>
         </tr>
-        <?php foreach ($this->games as $game): ?>
+        <?php foreach ($games as $game): ?>
             <tr>
                 <td><?= htmlspecialchars($game['id']) ?></td>
                 <td><?= htmlspecialchars($game['date']) ?></td>

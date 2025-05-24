@@ -43,7 +43,7 @@ if (!empty($game['tournament_id'])) {
     $tournamentName = $stmt->fetchColumn();
 }
 
-$content = __DIR__ . '/../views/games/edit.php';
+$content = 'games/edit.php';
 
 $controller = new FrontController($pdo);
 $controller->container->game = $game;
