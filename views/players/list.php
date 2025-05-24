@@ -1,7 +1,7 @@
 <h1>Players</h1>
 
 
-<?php if (empty($this->players)): ?>
+<?php if (empty($players)): ?>
     <p>No players found.</p>
 <?php else: ?>
     <table border="1" cellpadding="5">
@@ -10,7 +10,7 @@
             <th>Name</th>
             <th>FIDE-ID</th>
         </tr>
-        <?php foreach ($this->players as $player): ?>
+        <?php foreach ($players as $player): ?>
             <tr>
                 <td><?= htmlspecialchars($player['id']) ?></td>
                 <td><?= htmlspecialchars($player['name']) ?></td>

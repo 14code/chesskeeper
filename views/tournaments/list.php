@@ -1,6 +1,6 @@
 <h1>Tournaments</h1>
 
-<?php if (empty($this->tournaments)): ?>
+<?php if (empty($tournaments)): ?>
     <p>No tournaments found.</p>
 <?php else: ?>
     <table border="1" cellpadding="5">
@@ -10,7 +10,7 @@
             <th>Location</th>
             <th>Start Date</th>
         </tr>
-        <?php foreach ($this->tournaments as $t): ?>
+        <?php foreach ($tournaments as $t): ?>
             <tr>
                 <td><?= htmlspecialchars($t['id']) ?></td>
                 <td><?= htmlspecialchars($t['name']) ?></td>

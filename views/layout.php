@@ -16,7 +16,7 @@
     </nav>
     
     
-    <?php foreach ($this->messages as $message): ?>
+    <?php foreach ($messages as $message): ?>
         <p class="msg <?= htmlspecialchars($message['type']) ?>">
             <?= htmlspecialchars($message['text']) ?>
         </p>

@@ -1,9 +1,13 @@
 <?php
+
+use Chesskeeper\Services\MessageStack;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/db.php';
 
+$stack = new MessageStack(1);
+
 $uploadDir = __DIR__ . '/../data/users/1/images/';
-$errors = [];
-$success = [];
 
 // Verzeichnis sicherstellen
 if (!is_dir($uploadDir)) {
@@ -21,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = $uploadDir . $filename;
 
         if (!move_uploaded_file($tmpName, $destination)) {
-            $errors[] = "Failed to upload $originalName";
+            $stack->push('error', 'Failed to upload ' . $originalName);
             continue;
         }
 
@@ -29,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO images (user_id, game_id, image_url, position) VALUES (1, NULL, ?, 0)");
         $stmt->execute(["users/1/images/" . $filename]);
 
-        $success[] = $originalName;
+        $stack->push('success', $originalName);
     }
 }
 

@@ -19,6 +19,18 @@ class FrontController
         $this->container = (object) [];
     }
 
+
+    public function show(string $content)
+    {
+        $stack = new MessageStack(1);
+        $this->messages = $stack->popAll();
+
+        extract(get_object_vars($this));
+
+        include __DIR__ . '/../../views/layout.php';
+    }
+
+
     public function showAssignForm()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM images WHERE user_id = 1 AND game_id IS NULL ORDER BY id DESC");
@@ -29,13 +41,6 @@ class FrontController
         $this->show($content);
     }
 
-    public function show(string $content)
-    {
-        $stack = new MessageStack(1);
-        $this->messages = $stack->popAll();
-        
-        include __DIR__ . '/../../views/layout.php';
-    }
 
     public function showHome(): void
     {
