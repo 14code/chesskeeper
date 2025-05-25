@@ -5,37 +5,58 @@ namespace Chesskeeper\Controllers;
 use Chesskeeper\Services\CommentService;
 use Chesskeeper\Services\MessageStack;
 use Chesskeeper\Services\TagService;
+use Chesskeeper\Services\UserService;
 use PDO;
 
 class FrontController
 {
-    protected int $userId = 1;
-    protected string $viewDir;
-    protected string $imageDir;
+    protected int $userId = 0;
 
     public object $container;
 
     public function __construct(
-        protected PDO $pdo,
-        protected TagService $tagService,
-        protected CommentService $commentService
+        protected string         $appRoot,
+        protected PDO            $pdo,
+        protected TagService     $tagService,
+        protected CommentService $commentService,
+        protected UserService    $userService
     ) {
-        $this->viewDir = __DIR__ . '/../../views';
-        $this->imageDir = __DIR__ . "/../../data/users/{$this->userId}/images";
-        if (!is_dir($this->imageDir)) {
-            mkdir($this->imageDir, 0775, true);
-        }
         $this->container = (object)[];
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppRoot(): string
+    {
+        return $this->appRoot;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
     }
 
 
     public function show(string $relativeViewPath)
     {
-        $stack = new MessageStack($this->userId);
+        $stack = new MessageStack($this->getUserId());
         $this->container->messages = $stack->popAll();
         extract((array) $this->container);
-        $content = $this->viewDir . '/' . $relativeViewPath;
-        include $this->viewDir . '/layout.php';
+        $viewDir = $this->buildViewDir();
+        $content = $viewDir . '/' . $relativeViewPath;
+        include $viewDir . '/layout.php';
     }
 
 
@@ -58,7 +79,7 @@ class FrontController
             WHERE g.user_id = ?
             ORDER BY g.date DESC
         ");
-        $stmt->execute([$this->userId]);
+        $stmt->execute([$this->getUserId()]);
         $this->container->games = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $this->show('games/list.php');
@@ -72,7 +93,7 @@ class FrontController
     public function showPlayerList(): void
     {
         $stmt = $this->pdo->prepare("SELECT * FROM players WHERE user_id = ? ORDER BY name COLLATE NOCASE");
-        $stmt->execute([$this->userId]);
+        $stmt->execute([$this->getUserId()]);
         $this->container->players = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $this->show('players/list.php');
@@ -86,7 +107,7 @@ class FrontController
     public function showTournamentList(): void
     {
         $stmt = $this->pdo->prepare("SELECT id, name, location, start_date FROM tournaments WHERE user_id = ? ORDER BY start_date DESC");
-        $stmt->execute([$this->userId]);
+        $stmt->execute([$this->getUserId()]);
         $this->container->tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $this->show('tournaments/list.php');
@@ -100,7 +121,7 @@ class FrontController
     public function showAssignForm(): void
     {
         $stmt = $this->pdo->prepare("SELECT * FROM images WHERE user_id = ? AND game_id IS NULL ORDER BY id DESC");
-        $stmt->execute([$this->userId]);
+        $stmt->execute([$this->getUserId()]);
         $this->container->images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $this->show('images/assign.php');
@@ -114,7 +135,7 @@ class FrontController
 
     public function handleUpload(): void
     {
-        $stack = new MessageStack($this->userId);
+        $stack = new MessageStack($this->getUserId());
         $success = [];
         $errors = [];
 
@@ -136,7 +157,7 @@ class FrontController
                 $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
                 $filename = $hash . '.' . strtolower($ext);
 
-                $targetPath = $this->imageDir . '/' . $filename;
+                $targetPath = $this->makeImageDir() . '/' . $filename;
 
                 if (!move_uploaded_file($tmp, $targetPath)) {
                     $errors[] = "Datei $i konnte nicht gespeichert werden.";
@@ -144,7 +165,7 @@ class FrontController
                 }
 
                 $stmt = $this->pdo->prepare("INSERT OR IGNORE INTO images (image_url, user_id, position) VALUES (?, ?, 0)");
-                $stmt->execute([$filename, $this->userId]);
+                $stmt->execute([$filename, $this->getUserId()]);
 
                 $success[] = $_FILES['images']['name'][$i];
             }
@@ -205,9 +226,9 @@ class FrontController
         foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
             if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                 $filename = uniqid('img_') . '.jpg';
-                move_uploaded_file($tmp, $this->imageDir . '/' . $filename);
+                move_uploaded_file($tmp, $this->makeImageDir() . '/' . $filename);
 
-                $stmt = $this->pdo->prepare("INSERT INTO images (image_url, game_id, user_id, position) VALUES (?, ?, $this->userId, $position)");
+                $stmt = $this->pdo->prepare("INSERT INTO images (image_url, game_id, user_id, position) VALUES (?, ?, $this->getUserId(), $position)");
                 $stmt->execute([$filename, $gameId]);
                 $position++;
             }
@@ -242,7 +263,7 @@ class FrontController
         LEFT JOIN tournaments t ON g.tournament_id = t.id
         WHERE g.id = ? AND g.user_id = ?
     ");
-        $stmt->execute([$id, $this->userId]);
+        $stmt->execute([$id, $this->getUserId()]);
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$game) {
@@ -253,9 +274,9 @@ class FrontController
 
         // Dropdown-Listen vorbereiten
         $players = $this->pdo->prepare("SELECT id, name FROM players WHERE user_id = ? ORDER BY name COLLATE NOCASE");
-        $players->execute([$this->userId]);
+        $players->execute([$this->getUserId()]);
         $tournaments = $this->pdo->prepare("SELECT id, name FROM tournaments WHERE user_id = ? ORDER BY start_date DESC");
-        $tournaments->execute([$this->userId]);
+        $tournaments->execute([$this->getUserId()]);
 
 // Hole zugeordnete Bilder
         $stmt = $this->pdo->prepare("SELECT * FROM images WHERE game_id = ? ORDER BY position ASC");
@@ -315,27 +336,75 @@ class FrontController
                 $_POST['round'] ?? null,
                 $_POST['moves'] ?? null,
             $id,
-            $this->userId
+            $this->getUserId()
         ]);
 
         // Tags zuweisen
         if (!empty($_POST['tags'])) {
             $tags = array_filter(array_map('trim', explode(',', $_POST['tags'])));
-            $this->tagService->assignTags('game', $id, $tags, $this->userId);
+            $this->tagService->assignTags('game', $id, $tags, $this->getUserId());
         }
 
         // Kommentar speichern
         if (!empty($_POST['comment'])) {
-            $this->commentService->add('game', $id, $_POST['comment'], $this->userId);
+            $this->commentService->add('game', $id, $_POST['comment'], $this->getUserId());
         }
 
-        $stack = new MessageStack($this->userId);
+        $stack = new MessageStack($this->getUserId());
         $stack->push('success', 'Partie gespeichert.');
 
         header("Location: /game?id=$id");
         exit;
     }
 
+    public function handleLogin(): void
+    {
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        $user = $this->userService->verify($username, $password);
+
+        if ($user) {
+            $userId = $user['id'];
+            $this->setUserId($userId);
+            $_SESSION['user_id'] = $userId;
+            $stack = new MessageStack($userId);
+            $stack->push('success', 'Login erfolgreich.');
+            header('Location: /');
+            exit;
+        }
+
+        $stack = new MessageStack(0);
+        $stack->push('error', 'Login fehlgeschlagen.');
+        header('Location: /login');
+        exit;
+    }
+
+    /**
+     * @return string
+     */
+    public function makeImageDir(): string
+    {
+        $imageDir = $this->getAppRoot() . '/data/users/' . $this->getUserId() . '/images';
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0775, true);
+        }
+        return $imageDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function buildViewDir(): string
+    {
+        return $this->getAppRoot() . '/views';
+    }
+
+    public function showLoginForm()
+    {
+        $content = 'login.php';
+        $this->show($content);
+    }
 
 
 }

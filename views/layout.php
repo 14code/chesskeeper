@@ -13,7 +13,8 @@
         <a href="/assign">Assign</a> |
         <a href="/upload">Upload</a> |
         <a href="/import">Import</a> |
-        <a href="/camimport">Cam</a>
+        <a href="/camimport">Cam</a> |
+        <a href="/logout">Logout</a>
     </nav>
     
     

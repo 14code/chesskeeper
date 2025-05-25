@@ -1,8 +1,12 @@
 -- SQLite schema for Chesskeeper (explicit user_id, no defaults)
 
+
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    player_id INTEGER,
+    FOREIGN KEY (player_id) REFERENCES players(id)
 );
 
 CREATE TABLE players (
@@ -67,4 +71,3 @@ CREATE TABLE comments (
     content TEXT NOT NULL,
     created DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-

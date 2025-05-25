@@ -34,7 +34,9 @@ function routeRequest(FrontController $controller) {
                 $controller->showCamImportForm();
             }
             break;
-
+        case 'login': $controller->showLoginForm(); break;
+        case 'do-login': $controller->handleLogin(); break;
+        case 'logout': session_destroy(); header('Location: /login'); break;
         case '': $controller->showHome(); break;
         default: http_response_code(404); echo '404 Not Found';
     }

@@ -8,4 +8,5 @@
     <li><a href="/upload">Upload</a></li>
     <li><a href="/import">Import</a></li>
     <li><a href="/camimport">Cam</a></li>
+    <li><a href="/logout">Logout</a></li>
 </ul>
