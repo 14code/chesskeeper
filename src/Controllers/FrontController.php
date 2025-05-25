@@ -2,18 +2,24 @@
 
 namespace Chesskeeper\Controllers;
 
+use Chesskeeper\Services\CommentService;
 use Chesskeeper\Services\MessageStack;
+use Chesskeeper\Services\TagService;
 use PDO;
 
 class FrontController
 {
-    private int $userId = 1;
-    private string $viewDir;
-    private string $imageDir;
+    protected int $userId = 1;
+    protected string $viewDir;
+    protected string $imageDir;
 
     public object $container;
 
-    public function __construct(private PDO $pdo) {
+    public function __construct(
+        protected PDO $pdo,
+        protected TagService $tagService,
+        protected CommentService $commentService
+    ) {
         $this->viewDir = __DIR__ . '/../../views';
         $this->imageDir = __DIR__ . "/../../data/users/{$this->userId}/images";
         if (!is_dir($this->imageDir)) {

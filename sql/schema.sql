@@ -44,3 +44,27 @@ CREATE TABLE images (
     image_url TEXT NOT NULL,
     position INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    user_id INTEGER NOT NULL
+);
+
+CREATE TABLE tag_assignments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_id INTEGER NOT NULL,
+    entity_type TEXT NOT NULL,
+    entity_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL
+);
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entity_type TEXT NOT NULL,
+    entity_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
