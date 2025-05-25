@@ -9,11 +9,16 @@ class FrontController
 {
     private int $userId = 1;
     private string $viewDir;
+    private string $imageDir;
 
     public object $container;
 
     public function __construct(private PDO $pdo) {
         $this->viewDir = __DIR__ . '/../../views';
+        $this->imageDir = __DIR__ . "/../../data/users/{$this->userId}/images";
+        if (!is_dir($this->imageDir)) {
+            mkdir($this->imageDir, 0775, true);
+        }
         $this->container = (object)[];
     }
 
@@ -109,4 +114,59 @@ class FrontController
     {
         $this->show('games/quick-upload.php');
     }
+
+    public function handleUpload(): void
+    {
+        $stack = new MessageStack($this->userId);
+        $success = [];
+        $errors = [];
+
+        if (!empty($_FILES['images']['tmp_name'])) {
+            foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
+                $error = $_FILES['images']['error'][$i] ?? UPLOAD_ERR_NO_FILE;
+
+                if ($error !== UPLOAD_ERR_OK) {
+                    $errors[] = "Fehler beim Hochladen von Datei $i (Fehlercode $error)";
+                    continue;
+                }
+
+                if (!is_uploaded_file($tmp)) {
+                    $errors[] = "Temporäre Datei $i ist ungültig oder fehlt.";
+                    continue;
+                }
+
+                $hash = md5_file($tmp);
+                $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
+                $filename = $hash . '.' . strtolower($ext);
+
+                $targetPath = $this->imageDir . '/' . $filename;
+
+                if (!move_uploaded_file($tmp, $targetPath)) {
+                    $errors[] = "Datei $i konnte nicht gespeichert werden.";
+                    continue;
+                }
+
+                $stmt = $this->pdo->prepare("INSERT OR IGNORE INTO images (image_url, user_id, position) VALUES (?, ?, 0)");
+                $stmt->execute([$filename, $this->userId]);
+
+                $success[] = $_FILES['images']['name'][$i];
+            }
+
+            foreach ($errors as $e) {
+                $stack->push('error', $e);
+            }
+
+            if (!empty($success)) {
+                $stack->push('success', count($success) . ' Bild(er) erfolgreich hochgeladen.');
+            }
+
+            header('Location: /upload');
+            exit;
+        }
+
+        $stack->push('error', 'Keine Datei(en) ausgewählt.');
+        header('Location: /upload');
+        exit;
+    }
+
 }

@@ -21,7 +21,7 @@
 </div>
 <?php endif; ?>
 
-<form method="post" enctype="multipart/form-data" action="/upload.php">
+<form method="post" enctype="multipart/form-data" action="/upload">
     <input type="file" name="images[]" multiple required>
     <button type="submit">Upload</button>
 </form>

@@ -13,7 +13,13 @@ function routeRequest(FrontController $controller) {
         case 'tournaments': $controller->showTournamentList(); break;
         case 'assign': $controller->showAssignForm(); break;
         case 'import': $controller->showImportForm(); break;
-        case 'upload': $controller->showUploadForm(); break;
+        case 'upload':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller->handleUpload();
+            } else {
+                $controller->showUploadForm();
+            }
+            break;
         case '': $controller->showHome(); break;
         default: http_response_code(404); echo '404 Not Found';
     }
