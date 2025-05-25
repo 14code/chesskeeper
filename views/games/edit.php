@@ -1,6 +1,6 @@
 <h1>Edit Game #<?= htmlspecialchars($game['id']) ?></h1>
 
-<form method="post" action="/save-game.php">
+<form method="post" action="/game">
   <input type="hidden" name="id" value="<?= $game['id'] ?>">
 
   <label>Date:<br>
@@ -8,11 +8,11 @@
   </label><br><br>
 
   <label>White Player:<br>
-    <input type="text" name="white_player_name" value="<?= htmlspecialchars($game['white_name'] ?? '') ?>">
+    <input type="text" name="white" value="<?= htmlspecialchars($game['white_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Black Player:<br>
-    <input type="text" name="black_player_name" value="<?= htmlspecialchars($game['black_name'] ?? '') ?>">
+    <input type="text" name="black" value="<?= htmlspecialchars($game['black_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Result:<br>
@@ -25,7 +25,7 @@
   </label><br><br>
 
   <label>Tournament Name:<br>
-    <input type="text" name="tournament_name" value="<?= htmlspecialchars($game['tournament_name'] ?? '') ?>">
+    <input type="text" name="tournament" value="<?= htmlspecialchars($game['tournament_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Round:<br>
@@ -37,7 +37,34 @@
     <textarea name="moves" rows="10" cols="80"><?= htmlspecialchars($game['moves']) ?></textarea>
   </label><br><br>
 
-  <button type="submit">Save</button>
+    <label for="tags">Tags (kommagetrennt):</label><br>
+    <input type="text" name="tags" id="tags"
+           value="<?= htmlspecialchars(implode(', ', $tags ?? [])) ?>"
+           placeholder="z. B. Taktik, Favorit, Endspiel"><br><br>
+
+
+    <?php if (!empty($comments)): ?>
+        <fieldset>
+            <legend>Bisherige Kommentare</legend>
+            <ul>
+                <?php foreach ($comments as $comment): ?>
+                    <li>
+                        <small><?= htmlspecialchars($comment['created']) ?></small><br>
+                        <?= nl2br(htmlspecialchars($comment['content'])) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </fieldset>
+    <?php endif; ?>
+
+    <fieldset>
+        <legend>Neuer Kommentar</legend>
+        <textarea name="comment" rows="4" placeholder="Kommentar hinzufügen..."></textarea>
+    </fieldset>
+
+
+
+    <button type="submit">Save</button>
 </form>
 
 <hr>

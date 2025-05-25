@@ -264,6 +264,7 @@ class FrontController
 
         // Tags & Kommentare
         $tags = $this->tagService->getTagsFor('game', $id);
+        print_r($tags);
         $comments = $this->commentService->getFor('game', $id);
 
         // An View übergeben
@@ -275,6 +276,64 @@ class FrontController
         $this->container->comments = $comments;
 
         $this->show('games/edit.php');
+    }
+
+    public function handleGameSave(): void
+    {
+        $id = $_POST['id'] ?? null;
+
+        if (!$id || !ctype_digit($id)) {
+            http_response_code(400);
+            echo 'Ungültige oder fehlende Spiel-ID.';
+            return;
+        }
+
+        // Spieler/Turnier ggf. erzeugen
+        $whiteId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['white']));
+        $blackId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['black']));
+        $tournamentId = !empty($_POST['tournament'])
+            ? \Chesskeeper\Models\Tournament::findOrCreate($this->pdo, trim($_POST['tournament']))
+            : null;
+
+        $stmt = $this->pdo->prepare("
+        UPDATE games SET 
+            white_player_id = ?, 
+            black_player_id = ?, 
+            tournament_id = ?, 
+            result = ?, 
+            date = ?, 
+            round = ?, 
+            moves = ?
+        WHERE id = ? AND user_id = ?
+    ");
+        $stmt->execute([
+            $whiteId,
+            $blackId,
+            $tournamentId,
+            $_POST['result'] !== '' ? (float) $_POST['result'] : null,
+                $_POST['date'] ?? null,
+                $_POST['round'] ?? null,
+                $_POST['moves'] ?? null,
+            $id,
+            $this->userId
+        ]);
+
+        // Tags zuweisen
+        if (!empty($_POST['tags'])) {
+            $tags = array_filter(array_map('trim', explode(',', $_POST['tags'])));
+            $this->tagService->assignTags('game', $id, $tags, $this->userId);
+        }
+
+        // Kommentar speichern
+        if (!empty($_POST['comment'])) {
+            $this->commentService->add('game', $id, $_POST['comment'], $this->userId);
+        }
+
+        $stack = new MessageStack($this->userId);
+        $stack->push('success', 'Partie gespeichert.');
+
+        header("Location: /game?id=$id");
+        exit;
     }
 
 

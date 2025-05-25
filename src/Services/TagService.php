@@ -9,6 +9,7 @@ class TagService
 
     public function assignTags(string $type, int $id, array $tags, int $userId = 1): void
     {
+        $tags = array_unique($tags);
         foreach ($tags as $tag) {
             $tagId = $this->findOrCreate($tag, $userId);
             $stmt = $this->pdo->prepare("INSERT OR IGNORE INTO tag_assignments (tag_id, entity_type, entity_id, user_id) VALUES (?, ?, ?, ?)");
@@ -37,7 +38,8 @@ class TagService
             ORDER BY t.name
         ");
         $stmt->execute([$type, $id]);
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return array_unique($tags);
     }
 }
 
