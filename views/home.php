@@ -7,5 +7,5 @@
     <li><a href="/assign">Assign</a></li>
     <li><a href="/upload">Upload</a></li>
     <li><a href="/import">Import</a></li>
-    <li><a href="/camimport">Kamera</a></li>
+    <li><a href="/camimport">Cam</a></li>
 </ul>
