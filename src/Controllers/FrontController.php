@@ -110,10 +110,6 @@ class FrontController
         $this->show('upload/form.php');
     }
 
-    public function showQuickUploadForm(): void
-    {
-        $this->show('games/quick-upload.php');
-    }
 
     public function handleUpload(): void
     {
@@ -168,5 +164,60 @@ class FrontController
         header('Location: /upload');
         exit;
     }
+
+    public function showCamImportForm(): void
+    {
+        $content = 'images/camimport.php';
+        $this->show($content);
+    }
+
+
+    public function handleCamImport(): void
+    {
+        $whiteId = null;
+        $blackId = null;
+        $tournamentId = null;
+
+        if (!empty($_POST['white'])) {
+            $whiteId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['white']));
+        }
+
+        if (!empty($_POST['black'])) {
+            $blackId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['black']));
+        }
+
+        if (!empty($_POST['event'])) {
+            $tournamentId = \Chesskeeper\Models\Tournament::findOrCreate($this->pdo, trim($_POST['event']));
+        }
+
+        $gameId = \Chesskeeper\Models\Game::create($this->pdo, [
+            'white_player_id' => $whiteId,
+            'black_player_id' => $blackId,
+            'tournament_id'   => $tournamentId,
+            'result'          => ($_POST['result'] !== '') ? (float) $_POST['result'] : null,
+            'date'            => $_POST['date'] ?? date('Y-m-d'),
+            'round'           => $_POST['round'] ?? null,
+            'moves'           => '',
+        ]);
+
+        $position = 1;
+        foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
+            if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
+                $filename = uniqid('img_') . '.jpg';
+                move_uploaded_file($tmp, $this->imageDir . '/' . $filename);
+
+                $stmt = $this->pdo->prepare("INSERT INTO images (image_url, game_id, user_id, position) VALUES (?, ?, $this->userId, $position)");
+                $stmt->execute([$filename, $gameId]);
+                $position++;
+            }
+        }
+
+        $stack = new MessageStack(1);
+        $stack->push('success', 'Partie erfolgreich erstellt und Bilder zugeordnet.');
+
+        header('Location: /games');
+        exit;
+    }
+
 
 }

@@ -20,6 +20,14 @@ function routeRequest(FrontController $controller) {
                 $controller->showUploadForm();
             }
             break;
+        case 'camimport':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller->handleCamImport();
+            } else {
+                $controller->showCamImportForm();
+            }
+            break;
+
         case '': $controller->showHome(); break;
         default: http_response_code(404); echo '404 Not Found';
     }

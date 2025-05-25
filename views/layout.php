@@ -12,7 +12,8 @@
         <a href="/tournaments">Tournaments</a> |
         <a href="/assign">Assign</a> |
         <a href="/upload">Upload</a> |
-        <a href="/import">Import</a>
+        <a href="/import">Import</a> |
+        <a href="/camimport">Kamera</a>
     </nav>
     
     

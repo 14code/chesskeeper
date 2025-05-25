@@ -42,5 +42,5 @@ CREATE TABLE images (
     user_id INTEGER NOT NULL,
     game_id INTEGER,
     image_url TEXT NOT NULL,
-    position INTEGER NOT NULL
+    position INTEGER NOT NULL DEFAULT 0
 );
