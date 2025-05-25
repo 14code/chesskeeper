@@ -64,11 +64,6 @@ class FrontController
         $this->show('games/list.php');
     }
 
-    public function showGameForm(): void
-    {
-        $this->show('games/edit.php');
-    }
-
     public function showImportForm(): void
     {
         $this->show('import/form.php');
@@ -224,6 +219,64 @@ class FrontController
         header('Location: /games');
         exit;
     }
+
+    public function showGameForm(): void
+    {
+        $id = $_GET['id'] ?? null;
+
+        if (!$id || !ctype_digit($id)) {
+            http_response_code(400);
+            echo 'Ungültige oder fehlende Spiel-ID.';
+            return;
+        }
+
+        // Spiel mit Spielernamen und Turniernamen laden
+        $stmt = $this->pdo->prepare("
+        SELECT g.*, 
+               wp.name AS white_name,
+               bp.name AS black_name,
+               t.name AS tournament_name
+        FROM games g
+        LEFT JOIN players wp ON g.white_player_id = wp.id
+        LEFT JOIN players bp ON g.black_player_id = bp.id
+        LEFT JOIN tournaments t ON g.tournament_id = t.id
+        WHERE g.id = ? AND g.user_id = ?
+    ");
+        $stmt->execute([$id, $this->userId]);
+        $game = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$game) {
+            http_response_code(404);
+            echo 'Spiel nicht gefunden.';
+            return;
+        }
+
+        // Dropdown-Listen vorbereiten
+        $players = $this->pdo->prepare("SELECT id, name FROM players WHERE user_id = ? ORDER BY name COLLATE NOCASE");
+        $players->execute([$this->userId]);
+        $tournaments = $this->pdo->prepare("SELECT id, name FROM tournaments WHERE user_id = ? ORDER BY start_date DESC");
+        $tournaments->execute([$this->userId]);
+
+// Hole zugeordnete Bilder
+        $stmt = $this->pdo->prepare("SELECT * FROM images WHERE game_id = ? ORDER BY position ASC");
+        $stmt->execute([$id]);
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Tags & Kommentare
+        $tags = $this->tagService->getTagsFor('game', $id);
+        $comments = $this->commentService->getFor('game', $id);
+
+        // An View übergeben
+        $this->container->game = $game;
+        $this->container->players = $players->fetchAll(PDO::FETCH_ASSOC);
+        $this->container->tournaments = $tournaments->fetchAll(PDO::FETCH_ASSOC);
+        $this->container->images = $images;
+        $this->container->tags = $tags;
+        $this->container->comments = $comments;
+
+        $this->show('games/edit.php');
+    }
+
 
 
 }

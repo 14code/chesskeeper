@@ -1,9 +1,3 @@
-<?php $game = $this->container->game; ?>
-<?php $images = $this->container->images; ?>
-<?php $blackName = $this->container->blackName; ?>
-<?php $whiteName = $this->container->whiteName; ?>
-<?php $tournamentName = $this->container->tournamentName; ?>
-
 <h1>Edit Game #<?= htmlspecialchars($game['id']) ?></h1>
 
 <form method="post" action="/save-game.php">
@@ -14,11 +8,11 @@
   </label><br><br>
 
   <label>White Player:<br>
-    <input type="text" name="white_player_name" value="<?= htmlspecialchars($whiteName ?? '') ?>">
+    <input type="text" name="white_player_name" value="<?= htmlspecialchars($game['white_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Black Player:<br>
-    <input type="text" name="black_player_name" value="<?= htmlspecialchars($blackName ?? '') ?>">
+    <input type="text" name="black_player_name" value="<?= htmlspecialchars($game['black_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Result:<br>
@@ -31,7 +25,7 @@
   </label><br><br>
 
   <label>Tournament Name:<br>
-    <input type="text" name="tournament_name" value="<?= htmlspecialchars($tournamentName ?? '') ?>">
+    <input type="text" name="tournament_name" value="<?= htmlspecialchars($game['tournament_name'] ?? '') ?>">
   </label><br><br>
 
   <label>Round:<br>

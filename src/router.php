@@ -9,6 +9,7 @@ function routeRequest(FrontController $controller) {
 
     switch ($route) {
         case 'games': $controller->showGameList(); break;
+        case 'game': $controller->showGameForm(); break;
         case 'players': $controller->showPlayerList(); break;
         case 'tournaments': $controller->showTournamentList(); break;
         case 'assign': $controller->showAssignForm(); break;

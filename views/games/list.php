@@ -29,7 +29,7 @@
                 <td><?= htmlspecialchars($game['round'] ?? '') ?></td>
                 <td><?= htmlspecialchars($game['created'] ?? '') ?></td>
                 <td>
-                    <a href="/edit-game.php?id=<?= $game['id'] ?>">Edit</a>
+                    <a href="/game?id=<?= $game['id'] ?>">Edit</a>
                 </td>
             </tr>
         <?php endforeach; ?>
