@@ -7,15 +7,17 @@ use Chesskeeper\Models\Player;
 use Chesskeeper\Models\Tournament;
 use Chesskeeper\Models\Game;
 use PDO;
+use RuntimeException;
 
 class PGNImportController
 {
-    private PDO $db;
-    private PGNParser $parser;
+    protected PGNParser $parser;
 
-    public function __construct(PDO $db)
+    public function __construct(protected PDO $pdo, protected string $pgnDir)
     {
-        $this->db = $db;
+        if (! is_dir($pgnDir)) {
+            throw new RuntimeException('No existing PGN directory ' . $this->pgnDir);
+        }
         $this->parser = new PGNParser();
     }
 
@@ -26,17 +28,17 @@ class PGNImportController
 
         foreach ($parsedGames as $gameData) {
             // Spieler anlegen oder finden
-            $whiteId = Player::findOrCreate($this->db, $gameData['white']);
-            $blackId = Player::findOrCreate($this->db, $gameData['black']);
+            $whiteId = Player::findOrCreate($this->pdo, $gameData['white']);
+            $blackId = Player::findOrCreate($this->pdo, $gameData['black']);
 
             // Turnier anlegen oder finden
             $tournamentId = null;
             if ($gameData['event']) {
-                $tournamentId = Tournament::findOrCreate($this->db, $gameData['event'], $gameData['site'] ?? null);
+                $tournamentId = Tournament::findOrCreate($this->pdo, $gameData['event'], $gameData['site'] ?? null);
             }
 
             // Spiel anlegen
-            $gameId = Game::create($this->db, [
+            $gameId = Game::create($this->pdo, [
                 'white_player_id' => $whiteId,
                 'black_player_id' => $blackId,
                 'result' => $gameData['result'],
@@ -46,11 +48,7 @@ class PGNImportController
                 'tournament_id' => $tournamentId
             ]);
 
-            $pgnDir = __DIR__ . '/../../data/pgn/';
-            if (!is_dir($pgnDir)) {
-                mkdir($pgnDir, 0777, true);
-            }
-            file_put_contents($pgnDir . $gameId . '.pgn', $gameData['pgn']);
+            file_put_contents($this->pgnDir . '/' . $gameId . '.pgn', $gameData['pgn']);
 
             $imported[] = $gameId;
         }

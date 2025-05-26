@@ -6,6 +6,7 @@ use Chesskeeper\Services\CommentService;
 use Chesskeeper\Services\MessageStack;
 use Chesskeeper\Services\TagService;
 use Chesskeeper\Services\UserService;
+use Exception;
 use PDO;
 
 class FrontController
@@ -30,6 +31,14 @@ class FrontController
     public function getAppRoot(): string
     {
         return $this->appRoot;
+    }
+
+    /**
+     * @return string
+     */
+    public function buildUserDir(): string
+    {
+        return $this->getAppRoot() . '/data/users/' . $this->getUserId();
     }
 
     /**
@@ -385,7 +394,19 @@ class FrontController
      */
     public function makeImageDir(): string
     {
-        $imageDir = $this->getAppRoot() . '/data/users/' . $this->getUserId() . '/images';
+        $imageDir = $this->buildUserDir() . '/images';
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0775, true);
+        }
+        return $imageDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function makePGNDir(): string
+    {
+        $imageDir = $this->buildUserDir() . '/pgn';
         if (!is_dir($imageDir)) {
             mkdir($imageDir, 0775, true);
         }
@@ -404,6 +425,47 @@ class FrontController
     {
         $content = 'login.php';
         $this->show($content);
+    }
+    
+    public function handleImport()
+    {
+        $stack = new MessageStack(1);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $input = '';
+
+            if (!empty($_FILES['pgn_file']['tmp_name'])) {
+                $input = file_get_contents($_FILES['pgn_file']['tmp_name']);
+                $raw = file_get_contents($_FILES['pgn_file']['tmp_name']);
+                if (!mb_detect_encoding($raw, ['UTF-8'], true)) {
+                    $input = mb_convert_encoding($raw, 'UTF-8', 'Windows-1252'); // oder 'ISO-8859-1'
+                } else {
+                    $input = $raw;
+                }
+            } elseif (!empty($_POST['pgn_text'])) {
+                $input = $_POST['pgn_text'];
+                $input = mb_convert_encoding($input, 'UTF-8', 'auto'); // optional, wenn du nichts riskieren willst
+
+            }
+
+            if (trim($input) !== '') {
+                try {
+                    $importController = new PGNImportController($this->pdo, $this->makePGNDir());
+                    $importedIds = $importController->import($input);
+                    $success = count($importedIds) . " game(s) imported successfully.";
+                    $stack->push('success', $success);
+                    header('Location: /games');
+                    exit;
+                } catch (Exception $e) {
+                    $stack->push('error', 'Import failed: ' . $e->getMessage());
+                }
+            } else {
+                $error = "No PGN input provided.";
+                $stack->push('error', $error);
+            }
+        }
+        header('Location: /import');
+        exit;
     }
 
 

@@ -19,7 +19,13 @@ function routeRequest(FrontController $controller) {
         case 'players': $controller->showPlayerList(); break;
         case 'tournaments': $controller->showTournamentList(); break;
         case 'assign': $controller->showAssignForm(); break;
-        case 'import': $controller->showImportForm(); break;
+        case 'import':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller->handleImport();
+            } else {
+                $controller->showImportForm();
+            }
+            break;
         case 'upload':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $controller->handleUpload();

@@ -7,7 +7,7 @@
 <body>
     <h1>Import PGN</h1>
 
-    <form action="/import.php" method="post" enctype="multipart/form-data">
+    <form action="/import" method="post" enctype="multipart/form-data">
         <label for="pgn_text">Paste PGN:</label><br>
         <textarea name="pgn_text" id="pgn_text" rows="15" cols="80"></textarea><br><br>
 
