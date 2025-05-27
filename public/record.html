@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chesskeeper - Record Game</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+  <style>
+    #board { width: 400px; margin: 20px auto; }
+    #controls { text-align: center; margin-top: 10px; }
+    #pgnInput { width: 90%; margin: 10px auto; display: block; }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Record Game</h2>
+  <div id="board"></div>
+
+  <textarea id="pgnInput" rows="5" placeholder="Enter PGN moves here..."></textarea>
+
+  <div id="controls">
+    <button id="loadPGN">Load PGN</button>
+    <button id="reset">Reset</button>
+    <p id="status">Board status will appear here.</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  
+
+  <script src="/assets/js/record.js"></script>
+
+</body>
+</html>

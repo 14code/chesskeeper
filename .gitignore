@@ -3,6 +3,6 @@ config.php
 .DS_Store
 /data/
 /.artifacts/
-/public/assets/
+/public/vendor/
 /.composer/
 /vendor/
