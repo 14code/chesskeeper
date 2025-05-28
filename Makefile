@@ -39,6 +39,21 @@ reset:
 		-e CK_PLAYER_NAME="$(CK_PLAYER_NAME)" \
 		$(IMAGE_NAME) \
 		php bin/reset.php
+		
+
+# Backup SQLite DB
+backup:
+	cp data/chesskeeper.sqlite data/chesskeeper-$(shell date +"%Y-%m-%d_%H-%M-%S").bak
+
+# Keep only the 5 most recent backup files
+limit-backups:
+	@ls -1t data/chesskeeper-*.bak 2>/dev/null | tail -n +6 | xargs -r rm --
+
+
+migrate: backup
+	php bin/migrate.php
+
+
 
 # Open interactive shell inside container
 shell:

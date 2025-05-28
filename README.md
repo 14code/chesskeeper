@@ -112,6 +112,102 @@ make shell
 
 ---
 
+## 🗃️ Database Schema & Migration
+
+Chesskeeper uses a simple SQLite-based schema located in:
+
+```
+sql/schema.sql
+```
+
+This file defines the initial database structure for clean setups (e.g. during `make reset` or install).
+
+### 🔄 Migrating Existing Databases
+
+Schema changes (e.g. adding new fields) should be added to:
+
+```
+bin/migrate.php
+```
+
+This script is **idempotent** and will only apply necessary changes (e.g. missing columns) without affecting existing data.
+
+Run it anytime after a `git pull`:
+
+```bash
+make migrate
+```
+
+This will:
+- Backup the current database
+- Limit backups to the 5 most recent `.bak` files
+- Apply all defined migrations
+
+Alternatively:
+
+```bash
+php bin/migrate.php
+```
+
+### 💾 Backup & Versioned History
+
+Run this manually to create a snapshot:
+
+```bash
+make backup
+```
+
+It will create a file like:
+```
+data/chesskeeper-2025-05-28_18-45-12.bak
+```
+
+To keep storage clean, run:
+
+```bash
+make limit-backups
+```
+
+Or let it run automatically with `make migrate`.
+
+### ✏ Example: Adding a new column
+
+To add a column `notes` to the `games` table, edit `bin/migrate.php`:
+
+```php
+if (!hasColumn($pdo, 'games', 'notes')) {
+    $pdo->exec("ALTER TABLE games ADD COLUMN notes TEXT");
+    echo "✔ Added 'notes' column to games\n";
+}
+```
+
+---
+
+## 🚀 Releases & Versioning
+
+This project follows semantic versioning:
+
+- **`v0.1.0`** – Initial MVP (game management, PGN parsing, image uploads)
+- **`v0.2.0`** – Import enhancements, player/tournament linkage
+- **`v0.3.0`** – Interactive PGN recorder, board preview, Viewer.js integration
+- **`v0.4.0` (upcoming)** – Filter & export by player/color, persistent migration strategy, tags/comments
+
+To tag a new version:
+
+```bash
+git tag v0.4.0
+git push origin v0.4.0
+```
+
+You can review all tags with:
+
+```bash
+git tag
+```
+
+---
+
+
 ## 🧠 Notes
 
 - All data is scoped by `user_id`; currently, user `1` is assumed (single-user mode).
