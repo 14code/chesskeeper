@@ -70,21 +70,6 @@ assets: npm autoload
 
 # Download all 12 piece images (Wikipedia style)
 fetch-pieces:
-	mkdir -p public/assets/chess/pieces/wikipedia
-	curl -s -o public/assets/chess/pieces/wikipedia/wK.png https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/wQ.png https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/wR.png https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/wB.png https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/wN.png https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/wP.png https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bK.png https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bQ.png https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bR.png https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bB.png https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bN.png https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.png
-	curl -s -o public/assets/chess/pieces/wikipedia/bP.png https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.png
-
-fetch-pieces-svg:
 	mkdir -p public/assets/chess/pieces/cburnett
 	curl -s -o public/assets/chess/pieces/cburnett/wK.svg https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg
 	curl -s -o public/assets/chess/pieces/cburnett/wQ.svg https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg
