@@ -169,6 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     updateStatus();
+    
+    loadPGN();
+
     updatePGNField();
 });
 

@@ -2,6 +2,7 @@
 
 namespace Chesskeeper\Controllers;
 
+use Chesskeeper\Models\Player;
 use Chesskeeper\Services\CommentService;
 use Chesskeeper\Services\MessageStack;
 use Chesskeeper\Services\TagService;
@@ -210,11 +211,11 @@ class FrontController
         $tournamentId = null;
 
         if (!empty($_POST['white'])) {
-            $whiteId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['white']));
+            $whiteId = Player::findOrCreate($this->pdo, trim($_POST['white']));
         }
 
         if (!empty($_POST['black'])) {
-            $blackId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['black']));
+            $blackId = Player::findOrCreate($this->pdo, trim($_POST['black']));
         }
 
         if (!empty($_POST['event'])) {
@@ -294,7 +295,6 @@ class FrontController
 
         // Tags & Kommentare
         $tags = $this->tagService->getTagsFor('game', $id);
-        print_r($tags);
         $comments = $this->commentService->getFor('game', $id);
 
         // An View übergeben
@@ -319,11 +319,15 @@ class FrontController
         }
 
         // Spieler/Turnier ggf. erzeugen
-        $whiteId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['white']));
-        $blackId = \Chesskeeper\Models\Player::findOrCreate($this->pdo, trim($_POST['black']));
+        $whiteId = Player::findOrCreate($this->pdo, trim($_POST['white']));
+        $blackId = Player::findOrCreate($this->pdo, trim($_POST['black']));
         $tournamentId = !empty($_POST['tournament'])
             ? \Chesskeeper\Models\Tournament::findOrCreate($this->pdo, trim($_POST['tournament']))
             : null;
+
+        $isoDate = $_POST['date'] ?? '';
+        $timestamp = strtotime($isoDate);
+        $storedDate = $timestamp ? date('Y.m.d', $timestamp) : '';
 
         $stmt = $this->pdo->prepare("
         UPDATE games SET 
@@ -341,7 +345,7 @@ class FrontController
             $blackId,
             $tournamentId,
             $_POST['result'] !== '' ? (float) $_POST['result'] : null,
-                $_POST['date'] ?? null,
+                $storedDate ?? null,
                 $_POST['round'] ?? null,
                 $_POST['moves'] ?? null,
             $id,
