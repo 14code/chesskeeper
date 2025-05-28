@@ -1,0 +1,14 @@
+{
+  "name": "chesskeeper",
+  "version": "1.0.0",
+  "description": "Chesskeeper frontend assets",
+  "scripts": {
+    "build": "make assets"
+  },
+  "dependencies": {
+    "@chrisoakman/chessboardjs": "^1.0.0",
+    "chess.js": "^0.10.2"
+  },
+  "author": "",
+  "license": "MIT"
+}

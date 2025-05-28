@@ -6,3 +6,4 @@ config.php
 /public/vendor/
 /.composer/
 /vendor/
+/node_modules/
