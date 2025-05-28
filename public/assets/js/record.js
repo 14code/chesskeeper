@@ -38,10 +38,14 @@ function resetBoard() {
     updatePGNField();
 }
 
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+
 function loadPGN() {
     const pgn = document.getElementById("pgnInput").value;
     const ok = game.load_pgn(pgn);
-    if (!ok) {
+    if (!ok && ! isBlank(pgn)) {
         alert("Invalid PGN");
         return;
     }
