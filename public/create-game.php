@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $pdo->commit();
-    header("Location: /edit-game.php?id=" . $gameId);
+    header("Location: /game?id=" . $gameId);
     exit;
 } else {
     echo "No game created.";
