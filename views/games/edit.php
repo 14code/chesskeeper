@@ -1,6 +1,6 @@
 <h1>Edit Game #<?= htmlspecialchars($game['id']) ?></h1>
 
-<div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: start;">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: start;">
 <?php
 $rawDate = $game['date'] ?? '';
 $isoDate = preg_match('/^\d{4}\.\d{2}\.\d{2}$/', $rawDate)
@@ -9,7 +9,7 @@ $isoDate = preg_match('/^\d{4}\.\d{2}\.\d{2}$/', $rawDate)
 ?>
 
     <!-- Left Column: Metadata + Form -->
-    <div style="flex: 1; min-width: 300px; max-width: 600px;">
+    <div style="flex: 1; min-width: 300px; max-width: 400px;">
         <form method="post" action="/game">
             <input type="hidden" name="id" value="<?= $game['id'] ?>">
 
@@ -43,7 +43,7 @@ $isoDate = preg_match('/^\d{4}\.\d{2}\.\d{2}$/', $rawDate)
             </label><br><br>
 
             <label>Moves:<br>
-                <textarea name="moves" id="pgnInput" rows="10" cols="80"><?= htmlspecialchars($game['moves']) ?></textarea>
+                <textarea name="moves" id="pgnInput" rows="10" cols="50"><?= htmlspecialchars($game['moves']) ?></textarea>
             </label><br><br>
 
             <label for="tags">Tags (comma separated):</label><br>
@@ -78,25 +78,73 @@ $isoDate = preg_match('/^\d{4}\.\d{2}\.\d{2}$/', $rawDate)
     <div style="flex: 1; min-width: 300px;">
         <?php include __DIR__ . '/../partials/record-board.php'; ?>
     </div>
+
+    <!-- Inline Viewer -->
+    <div style="flex: 1;">
+        <div id="viewer-container" style="max-width: 420px; height: 600px; border: 1px solid #ccc;">
+            <ul id="image-list" style="display: none;">
+                <?php foreach ($images as $img): ?>
+                    <li>
+                        <img
+                                src="/image.php?file=<?= htmlspecialchars(basename($img['image_url'])) ?>"
+                                alt="Position <?= $img['position'] ?>"
+                                data-title="Position <?= $img['position'] ?>"
+                                style="max-width: 100%;"
+                        >
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+    
 </div>
 
 <hr>
 
 <h2>Associated Images</h2>
-<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+
+<div id="image-gallery" style="display: flex; flex-wrap: wrap; gap: 12px;">
     <?php foreach ($images as $img): ?>
-        <div style="border: 1px solid #ccc; padding: 4px;">
-            <a href="/image.php?file=<?= htmlspecialchars(basename($img['image_url'])) ?>" target="_blank">
-                <img src="/image.php?file=<?= htmlspecialchars(basename($img['image_url'])) ?>" style="max-width: 200px;">
-            </a>
-            <div style="text-align: center;">Position <?= $img['position'] ?></div>
+        <div>
+            <img
+                    src="/image.php?file=<?= htmlspecialchars(basename($img['image_url'])) ?>"
+                    data-title="Position <?= $img['position'] ?>"
+                    style="max-width: 200px; cursor: zoom-in;"
+            >
+            <form method="post" action="/delete-image.php" onsubmit="return confirm('Delete this image?');">
+                <input type="hidden" name="id" value="<?= $img['id'] ?>">
+                <button type="submit" style="font-size: small;">🗑️</button>
+            </form>
         </div>
-        <form method="post" action="/delete-image.php" onsubmit="return confirm('Delete this image?');">
-            <input type="hidden" name="id" value="<?= $img['id'] ?>">
-            <button type="submit" style="font-size: small;">🗑️</button>
-        </form>
     <?php endforeach; ?>
 </div>
+
+<script src="/vendor/viewerjs/viewer.min.js"></script>
+<link rel="stylesheet" href="/vendor/viewerjs/viewer.min.css">
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('viewer-container');
+        const list = document.getElementById('image-list');
+
+        const viewer = new Viewer(list, {
+            inline: true,
+            container: container,
+            navbar: false,
+            title: false,
+            toolbar: {
+                zoomIn: 1,
+                zoomOut: 1,
+                oneToOne: 1,
+                reset: 1,
+                prev: 1,
+                next: 1,
+                rotateLeft: 1,
+                rotateRight: 1,
+            },
+        });
+    });
+</script>
 
 <hr>
 <form method="post" action="/delete-game.php" onsubmit="return confirm('Really delete this game?');">

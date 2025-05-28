@@ -64,6 +64,9 @@ assets: npm autoload
 	mkdir -p public/vendor/chess
 	cp node_modules/chess.js/chess.min.js public/vendor/chess/
 	cp node_modules/@chrisoakman/chessboardjs/dist/chessboard-1.0.0.min.* public/vendor/chess/
+	mkdir -p public/vendor/viewerjs
+	cp node_modules/viewerjs/dist/viewer.min.js public/vendor/viewerjs
+	cp node_modules/viewerjs/dist/viewer.min.css public/vendor/viewerjs
 
 # Download all 12 piece images (Wikipedia style)
 fetch-pieces:
